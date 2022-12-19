@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 
 @Controller
 public class TradeController {
@@ -44,6 +45,10 @@ public class TradeController {
     @PostMapping("/trade/validate")
     public String validate(@Valid @ModelAttribute(ATTRIB_NAME) TradeModel trade, BindingResult result, RedirectAttributes redirAttrs) {
         if (!result.hasErrors()) {
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            trade.setRevisionDate(timestamp);
+            trade.setCreationDate(timestamp);
+            trade.setTradeDate(timestamp);
             tradeService.saveTrade(trade);
             redirAttrs.addFlashAttribute("successSaveMessage", "Trade successfully added to list");
             logger.info("Trade {} was added to Trade List", trade);

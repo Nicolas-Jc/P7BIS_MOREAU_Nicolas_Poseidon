@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 
 @Controller
 public class CurveController {
@@ -47,6 +48,9 @@ public class CurveController {
     public String validate(@Valid @ModelAttribute(ATTRIB_NAME) CurvePointModel curvePoint, BindingResult result, RedirectAttributes redirAttrs) {
 
         if (!result.hasErrors()) {
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            curvePoint.setAsOfDate(timestamp);
+            curvePoint.setCreationDate(timestamp);
             curvePointService.saveCurvePoint(curvePoint);
             redirAttrs.addFlashAttribute("successSaveMessage", "CurvePoint successfully added to list");
             logger.info("CurvePoint {} was added to Curve Point List", curvePoint);

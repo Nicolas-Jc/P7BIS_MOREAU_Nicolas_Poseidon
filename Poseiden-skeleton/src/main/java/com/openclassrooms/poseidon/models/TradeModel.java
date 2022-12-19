@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 
@@ -42,7 +43,7 @@ public class TradeModel {
 
     @NotNull(message = "Trade date is mandatory")
     @Column(name = "tradeDate")
-    private LocalDateTime tradeDate;
+    private Timestamp tradeDate;
 
     @Size(max = 125)
     @Column(name = "security")
@@ -67,14 +68,14 @@ public class TradeModel {
 
     @NotNull(message = "Creation date is mandatory")
     @Column(name = "creationDate")
-    private LocalDateTime creationDate;
+    private Timestamp creationDate;
 
     @Size(max = 125)
     @Column(name = "revisionName")
     private String revisionName;
 
     @Column(name = "revisionDate")
-    private LocalDateTime revisionDate;
+    private Timestamp revisionDate;
 
     @Size(max = 125)
     @Column(name = "dealName")
@@ -156,11 +157,11 @@ public class TradeModel {
         this.benchmark = benchmark;
     }
 
-    public LocalDateTime getTradeDate() {
+    public Timestamp getTradeDate() {
         return tradeDate;
     }
 
-    public void setTradeDate(LocalDateTime tradeDate) {
+    public void setTradeDate(Timestamp tradeDate) {
         this.tradeDate = tradeDate;
     }
 
@@ -204,11 +205,11 @@ public class TradeModel {
         this.creationName = creationName;
     }
 
-    public LocalDateTime getCreationDate() {
+    public Timestamp getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -220,11 +221,11 @@ public class TradeModel {
         this.revisionName = revisionName;
     }
 
-    public LocalDateTime getRevisionDate() {
+    public Timestamp getRevisionDate() {
         return revisionDate;
     }
 
-    public void setRevisionDate(LocalDateTime revisionDate) {
+    public void setRevisionDate(Timestamp revisionDate) {
         this.revisionDate = revisionDate;
     }
 

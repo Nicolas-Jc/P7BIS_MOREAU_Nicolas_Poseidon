@@ -3,6 +3,7 @@ package com.openclassrooms.poseidon.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -39,7 +40,7 @@ public class BidListModel {
     private String benchmark;
 
     @Column(name = "bidListDate")
-    private LocalDateTime bidListDate;
+    private Timestamp bidListDate;
 
     @Size(max = 125)
     @Column(name = "commentary")
@@ -66,14 +67,14 @@ public class BidListModel {
     private String creationName;
 
     @Column(name = "creationDate")
-    private LocalDateTime creationDate;
+    private Timestamp creationDate;
 
     @Size(max = 125)
     @Column(name = "revisionName")
     private String revisionName;
 
     @Column(name = "revisionDate")
-    private LocalDateTime revisionDate;
+    private Timestamp revisionDate;
 
     @Size(max = 125)
     @Column(name = "dealName")
@@ -155,11 +156,11 @@ public class BidListModel {
         this.benchmark = benchmark;
     }
 
-    public LocalDateTime getBidListDate() {
+    public Timestamp getBidListDate() {
         return bidListDate;
     }
 
-    public void setBidListDate(LocalDateTime bidListDate) {
+    public void setBidListDate(Timestamp bidListDate) {
         this.bidListDate = bidListDate;
     }
 
@@ -211,11 +212,11 @@ public class BidListModel {
         this.creationName = creationName;
     }
 
-    public LocalDateTime getCreationDate() {
+    public Timestamp getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -227,11 +228,11 @@ public class BidListModel {
         this.revisionName = revisionName;
     }
 
-    public LocalDateTime getRevisionDate() {
+    public Timestamp getRevisionDate() {
         return revisionDate;
     }
 
-    public void setRevisionDate(LocalDateTime revisionDate) {
+    public void setRevisionDate(Timestamp revisionDate) {
         this.revisionDate = revisionDate;
     }
 

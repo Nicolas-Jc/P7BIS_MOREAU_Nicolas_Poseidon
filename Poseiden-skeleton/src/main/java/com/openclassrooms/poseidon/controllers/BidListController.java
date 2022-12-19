@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 
 @Controller
 public class BidListController {
@@ -50,6 +51,9 @@ public class BidListController {
                            BindingResult result, RedirectAttributes redirAttrs) {
 
         if (!result.hasErrors()) {
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            bidList.setBidListDate(timestamp);
+            bidList.setCreationDate(timestamp);
             bidListService.saveBid(bidList);
             redirAttrs.addFlashAttribute("successSaveMessage", "Bid successfully added to list");
             logger.info("Bid {} was added to BidList", bidList);

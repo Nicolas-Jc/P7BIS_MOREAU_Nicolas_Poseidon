@@ -2,6 +2,7 @@ package com.openclassrooms.poseidon.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 
@@ -17,7 +18,7 @@ public class CurvePointModel {
     private Integer curveId;
 
     @Column(name = "asOfDate")
-    private LocalDateTime asOfDate;
+    private Timestamp asOfDate;
 
     @NotNull(message = "Term is mandatory")
     @Column(name = "term")
@@ -28,7 +29,7 @@ public class CurvePointModel {
     private Double value;
 
     @Column(name = "creationDate")
-    private LocalDateTime creationDate;
+    private Timestamp creationDate;
 
     public Integer getId() {
         return id;
@@ -46,11 +47,11 @@ public class CurvePointModel {
         this.curveId = curveId;
     }
 
-    public LocalDateTime getAsOfDate() {
+    public Timestamp getAsOfDate() {
         return asOfDate;
     }
 
-    public void setAsOfDate(LocalDateTime asOfDate) {
+    public void setAsOfDate(Timestamp asOfDate) {
         this.asOfDate = asOfDate;
     }
 
@@ -70,11 +71,11 @@ public class CurvePointModel {
         this.value = value;
     }
 
-    public LocalDateTime getCreationDate() {
+    public Timestamp getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
     }
 }
