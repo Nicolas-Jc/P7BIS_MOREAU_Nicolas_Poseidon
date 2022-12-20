@@ -3,6 +3,7 @@ package com.openclassrooms.poseidon.models;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -26,6 +27,7 @@ public class TradeModel {
     private String type;
 
     @Column(name = "buyQuantity")
+    @PositiveOrZero(message = "Buy Quantity must be greater than or equal to zero")
     private Double buyQuantity;
 
     @Column(name = "sellQuantity")
@@ -61,12 +63,10 @@ public class TradeModel {
     @Column(name = "book")
     private String book;
 
-    @NotBlank(message = "Creation Name is mandatory")
     @Size(max = 125)
     @Column(name = "creationName")
     private String creationName;
 
-    @NotNull(message = "Creation date is mandatory")
     @Column(name = "creationDate")
     private Timestamp creationDate;
 

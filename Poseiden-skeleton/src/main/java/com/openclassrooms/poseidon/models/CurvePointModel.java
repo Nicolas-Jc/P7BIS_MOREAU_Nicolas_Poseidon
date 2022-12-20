@@ -2,6 +2,8 @@ package com.openclassrooms.poseidon.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
@@ -13,6 +15,7 @@ public class CurvePointModel {
     @Column(name = "id")
     private Integer id;
 
+    @Positive(message = "Curve point Id must be greater than zero")
     @NotNull(message = "Curve point Id is mandatory")
     @Column(name = "curveId")
     private Integer curveId;
@@ -21,10 +24,12 @@ public class CurvePointModel {
     private Timestamp asOfDate;
 
     @NotNull(message = "Term is mandatory")
+    @PositiveOrZero(message = "Term should be a decimal number and greater than zero")
     @Column(name = "term")
     private Double term;
 
     @NotNull(message = "Value is mandatory")
+    @PositiveOrZero(message = "Value should be a decimal number and greater than zero")
     @Column(name = "value")
     private Double value;
 

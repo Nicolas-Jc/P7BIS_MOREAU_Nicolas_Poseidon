@@ -27,38 +27,39 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @RolesAllowed("ADMIN")
+    //@RolesAllowed("ADMIN")
     @RequestMapping("/user/list")
     public String home(Model model) {
-        model.addAttribute(ATTRIB_NAME, userRepository.findAll());
+        model.addAttribute("users", userRepository.findAll());
         logger.info("User List Data loading");
         return "user/list";
     }
 
-    @RolesAllowed("ADMIN")
+    //@RolesAllowed("ADMIN")
     @GetMapping("/user/add")
     public String addUser(Model model) {
-        model.addAttribute(ATTRIB_NAME, new UserModel());
-        logger.info("View User Add loaded");
+        model.addAttribute("user", new UserModel());
+        logger.info("View User Add Form loaded");
         return "user/add";
     }
 
     // Button Add User To List
-    @RolesAllowed("ADMIN")
+    //@RolesAllowed("ADMIN")
     @PostMapping("/user/validate")
-    public String validate(@Valid @ModelAttribute("user") UserModel user, BindingResult result,
+    public String validate(@Valid UserModel user, BindingResult result,
                            Model model, RedirectAttributes redirAttrs) {
-        if (userRepository.existsByUsername(user.getUsername())) {
-            redirAttrs.addFlashAttribute("errorAddUserMessage", "This user already exists");
+       //f (userRepository.existsByUsername(user.getUsername())) {
+       /*if (userRepository.existsByUsername(user.getUsername())) {
+                redirAttrs.addFlashAttribute("errorAddUserMessage", "This user already exists");
             return "redirect:/user/add";
-        }
+        }*/
         if (!result.hasErrors()) {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setPassword(encoder.encode(user.getPassword()));
             userRepository.save(user);
             redirAttrs.addFlashAttribute("successSaveMessage", "User successfully added to list");
             logger.info("User {} was added to Trade List", user);
-            model.addAttribute(ATTRIB_NAME, userRepository.findAll());
+            model.addAttribute("users", userRepository.findAll());
             return REDIRECT_TRANSAC;
         }
         logger.info("Error creation User");
@@ -66,7 +67,7 @@ public class UserController {
     }
 
     // Show User Update Form
-    @RolesAllowed("ADMIN")
+    //@RolesAllowed("ADMIN")
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         //UserModel user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
@@ -78,8 +79,8 @@ public class UserController {
                 logger.info(USER_NOT_EXISTS, id);
                 return REDIRECT_TRANSAC;
             }
-            model.addAttribute(ATTRIB_NAME, userRepository.findById(id));
-            logger.info("Success User Update");
+            model.addAttribute("user", userRepository.findById(id));
+            logger.info("Success Load User Form");
         } catch (Exception e) {
             logger.info("Error to update \"User\" : {}", id);
         }
@@ -88,9 +89,9 @@ public class UserController {
     }
 
     // Update User Button
-    @RolesAllowed("ADMIN")
+    //@RolesAllowed("ADMIN")
     @PostMapping("/user/update/{id}")
-    public String updateUser(@PathVariable("id") Integer id, @Valid @ModelAttribute("user") UserModel user,
+    public String updateUser(@PathVariable("id") Integer id, @Valid UserModel user,
                              BindingResult result, Model model, RedirectAttributes redirAttrs) {
         if (result.hasErrors()) {
             logger.info("UPDATE User : KO");
@@ -105,15 +106,16 @@ public class UserController {
         user.setPassword(encoder.encode(user.getPassword()));
         user.setId(id);
         userRepository.save(user);
-        model.addAttribute(ATTRIB_NAME, userRepository.findAll());
+        model.addAttribute("user", userRepository.findAll());
         logger.info("UPDATE User {} : OK", id);
         redirAttrs.addFlashAttribute("successUpdateMessage", "User successfully updated");
         return REDIRECT_TRANSAC;
     }
 
-    @RolesAllowed("ADMIN")
+    //@RolesAllowed("ADMIN")
     @GetMapping("/user/delete/{id}")
-    public String deleteUser(@PathVariable("id") Integer id, Model model, RedirectAttributes redirAttrs) {
+    public String deleteUser(@PathVariable("id") Integer id, Model model,
+                             RedirectAttributes redirAttrs) {
         //UserModel user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         //userRepository.delete(user);
         //model.addAttribute(ATTRIB_NAME, userRepository.findAll());
@@ -124,7 +126,7 @@ public class UserController {
             }
             userRepository.deleteById(id);
             logger.info("Delete User : OK");
-            model.addAttribute(ATTRIB_NAME, userRepository.findAll());
+            model.addAttribute("users", userRepository.findAll());
             redirAttrs.addFlashAttribute("successDeleteMessage", "User successfully deleted");
         } catch (Exception e) {
             redirAttrs.addFlashAttribute("errorDeleteMessage", "Error during deletion");

@@ -7,9 +7,5 @@ import java.util.List;
 
 public interface RatingRepository extends JpaRepository<RatingModel, Integer> {
 
-    boolean existsById(int id);
 
-    RatingModel findById(int id);
-
-    List<RatingModel> findAll();
 }

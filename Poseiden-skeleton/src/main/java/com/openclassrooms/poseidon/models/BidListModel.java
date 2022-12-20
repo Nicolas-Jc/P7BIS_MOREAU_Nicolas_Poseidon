@@ -2,6 +2,7 @@ package com.openclassrooms.poseidon.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class BidListModel {
     private String type;
 
     @Column(name = "bidQuantity")
+    @Positive(message = "Bid Quantity must be greater than zero")
     private Double bidQuantity;
 
     @Column(name = "askQuantity")

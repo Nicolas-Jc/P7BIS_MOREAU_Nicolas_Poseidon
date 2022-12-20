@@ -71,7 +71,7 @@ public class BidListController {
                 logger.info(BID_NOT_EXISTS, id);
                 return REDIRECT_TRANSAC;
             }
-            model.addAttribute(ATTRIB_NAME, bidListRepository.findByBidListId(id));
+            model.addAttribute(ATTRIB_NAME, bidListRepository.findById(id));
             logger.info("Succes Bid Update");
         } catch (Exception e) {
             logger.info("Error to update \"Bid Id\" : {}", id);

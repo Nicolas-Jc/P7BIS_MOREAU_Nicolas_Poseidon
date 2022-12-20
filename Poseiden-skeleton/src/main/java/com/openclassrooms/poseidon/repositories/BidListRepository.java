@@ -8,7 +8,5 @@ import java.util.List;
 
 public interface BidListRepository extends JpaRepository<BidListModel, Integer> {
 
-    BidListModel findByBidListId(int bidListId);
 
-    List<BidListModel> findAll();
 }

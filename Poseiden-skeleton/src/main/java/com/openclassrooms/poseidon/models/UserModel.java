@@ -1,7 +1,10 @@
 package com.openclassrooms.poseidon.models;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 
 @Entity
 @Table(name = "users")
@@ -11,15 +14,15 @@ public class UserModel {
     @Column(name = "id")
     private Integer id;
     @Column(name = "username")
-    @NotBlank(message = "Username is mandatory")
+    @NotNull (message = "Username is mandatory")
     private String username;
-    @NotBlank(message = "Password is mandatory")
+    @NotNull(message = "Password is mandatory")
     @Column(name = "password")
     private String password;
-    @NotBlank(message = "FullName is mandatory")
+    @NotNull(message = "FullName is mandatory")
     @Column(name = "fullname")
     private String fullname;
-    @NotBlank(message = "Role is mandatory")
+    @NotNull(message = "Role is mandatory")
     @Column(name = "role")
     private String role;
 

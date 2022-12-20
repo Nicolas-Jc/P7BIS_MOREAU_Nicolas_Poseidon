@@ -22,18 +22,22 @@ public class RuleNameModel {
 
     @Size(max = 125)
     @Column(name = "json")
+    @NotBlank(message = "json is mandatory")
     private String json;
 
     @Size(max = 512)
     @Column(name = "template")
+    @NotBlank(message = "template is mandatory")
     private String template;
 
     @Size(max = 125)
     @Column(name = "sqlStr")
+    @NotBlank(message = "sqlStr is mandatory")
     private String sqlStr;
 
     @Size(max = 125)
     @Column(name = "sqlPart")
+    @NotBlank(message = "sqlPart is mandatory")
     private String sqlPart;
 
     public Integer getId() {

@@ -7,9 +7,5 @@ import java.util.List;
 
 
 public interface RuleNameRepository extends JpaRepository<RuleNameModel, Integer> {
-    List<RuleNameModel> findAll();
 
-    RuleNameModel findById(int id);
-
-    boolean existsById(int id);
 }

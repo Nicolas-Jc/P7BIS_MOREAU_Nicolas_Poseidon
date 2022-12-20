@@ -7,9 +7,5 @@ import java.util.List;
 
 
 public interface TradeRepository extends JpaRepository<TradeModel, Integer> {
-    boolean existsByTradeId(int tradeId);
 
-    TradeModel findById(int id);
-
-    List<TradeModel> findAll();
 }
