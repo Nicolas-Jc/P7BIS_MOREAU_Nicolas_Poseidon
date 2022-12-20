@@ -1,7 +1,7 @@
 package com.openclassrooms.poseidon.controllers;
 
 import com.openclassrooms.poseidon.models.RatingModel;
-import com.openclassrooms.poseidon.services.RatingService;
+import com.openclassrooms.poseidon.repositories.RatingRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +22,16 @@ public class RatingController {
     private static final String REDIRECT_TRANSAC = "redirect:/rating/list";
     private static final String RATING_NOT_EXISTS = "Rating {} not exists ! : ";
 
+
     @Autowired
-    RatingService ratingService;
+    RatingRepository ratingRepository;
+
 
     // return view containing all Ratings
     @GetMapping("/rating/list")
     //@RequestMapping("/rating/list")
     public String home(Model model) {
-        model.addAttribute(ATTRIB_NAME, ratingService.getAllRatings());
+        model.addAttribute(ATTRIB_NAME, ratingRepository.findAll());
         logger.info("Rating List Data loading");
         return "rating/list";
     }
@@ -47,7 +49,7 @@ public class RatingController {
     public String validate(@Valid @ModelAttribute(ATTRIB_NAME) RatingModel rating, BindingResult result, RedirectAttributes redirAttrs) {
 
         if (!result.hasErrors()) {
-            ratingService.saveRating(rating);
+            ratingRepository.save(rating);
             redirAttrs.addFlashAttribute("successSaveMessage", "Rating successfully added to list");
             logger.info("Rating {} was added to Rating List", rating);
             return REDIRECT_TRANSAC;
@@ -60,11 +62,11 @@ public class RatingController {
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         try {
-            if (!ratingService.checkIfIdExists(id)) {
+            if (!ratingRepository.existsById(id)) {
                 logger.info(RATING_NOT_EXISTS, id);
                 return REDIRECT_TRANSAC;
             }
-            model.addAttribute(ATTRIB_NAME, ratingService.getRatingById(id));
+            model.addAttribute(ATTRIB_NAME, ratingRepository.findById(id));
             logger.info("Success Rating Update");
         } catch (Exception e) {
             logger.info("Error to update \"Rating\" : {}", id);
@@ -77,12 +79,12 @@ public class RatingController {
     @PostMapping("/rating/update/{id}")
     public String updateRating(@PathVariable("id") Integer id, @Valid @ModelAttribute(ATTRIB_NAME) RatingModel rating,
                                BindingResult result, RedirectAttributes redirAttrs) {
-        if (!ratingService.checkIfIdExists(id)) {
+        if (!ratingRepository.existsById(id)) {
             logger.info(RATING_NOT_EXISTS, id);
             return REDIRECT_TRANSAC;
         }
         if (!result.hasErrors()) {
-            ratingService.saveRating(rating);
+            ratingRepository.save(rating);
             logger.info("UPDATE Rating {} : OK", id);
             redirAttrs.addFlashAttribute("successUpdateMessage", "Rating successfully updated");
             return REDIRECT_TRANSAC;
@@ -95,13 +97,13 @@ public class RatingController {
     @GetMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model, RedirectAttributes redirAttrs) {
         try {
-            if (!ratingService.checkIfIdExists(id)) {
+            if (!ratingRepository.existsById(id)) {
                 logger.info(RATING_NOT_EXISTS, id);
                 return REDIRECT_TRANSAC;
             }
-            ratingService.deleteRatingById(id);
+            ratingRepository.deleteById(id);
             logger.info("Delete Rating : OK");
-            model.addAttribute(ATTRIB_NAME, ratingService.getAllRatings());
+            model.addAttribute(ATTRIB_NAME, ratingRepository.findAll());
             redirAttrs.addFlashAttribute("successDeleteMessage", "Rating successfully deleted");
         } catch (Exception e) {
             redirAttrs.addFlashAttribute("errorDeleteMessage", "Error during deletion");

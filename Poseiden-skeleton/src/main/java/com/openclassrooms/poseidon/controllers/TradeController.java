@@ -1,7 +1,7 @@
 package com.openclassrooms.poseidon.controllers;
 
 import com.openclassrooms.poseidon.models.TradeModel;
-import com.openclassrooms.poseidon.services.TradeService;
+import com.openclassrooms.poseidon.repositories.TradeRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +21,15 @@ public class TradeController {
     private static final String REDIRECT_TRANSAC = "redirect:/trade/list";
     private static final String TRADE_NOT_EXISTS = "Trade {} not exists ! : ";
 
+
     @Autowired
-    TradeService tradeService;
+    TradeRepository tradeRepository;
 
     // return view containing all Trades
     @GetMapping("/trade/list")
     //@RequestMapping("/trade/list")
     public String home(Model model) {
-        model.addAttribute(ATTRIB_NAME, tradeService.getAllTrades());
+        model.addAttribute(ATTRIB_NAME, tradeRepository.findAll());
         logger.info("Trade List Data loading");
         return "trade/list";
     }
@@ -49,7 +50,7 @@ public class TradeController {
             trade.setRevisionDate(timestamp);
             trade.setCreationDate(timestamp);
             trade.setTradeDate(timestamp);
-            tradeService.saveTrade(trade);
+            tradeRepository.save(trade);
             redirAttrs.addFlashAttribute("successSaveMessage", "Trade successfully added to list");
             logger.info("Trade {} was added to Trade List", trade);
             return REDIRECT_TRANSAC;
@@ -62,11 +63,11 @@ public class TradeController {
     @GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         try {
-            if (!tradeService.checkIfTradeIdExists(id)) {
+            if (!tradeRepository.existsById(id)) {
                 logger.info(TRADE_NOT_EXISTS, id);
                 return REDIRECT_TRANSAC;
             }
-            model.addAttribute(ATTRIB_NAME, tradeService.getTradeById(id));
+            model.addAttribute(ATTRIB_NAME, tradeRepository.findById(id));
             logger.info("Success Trade Update");
         } catch (Exception e) {
             logger.info("Error to update \"Trade\" : {}", id);
@@ -78,12 +79,12 @@ public class TradeController {
     @PostMapping("/trade/update/{id}")
     public String updateTrade(@PathVariable("id") Integer id, @Valid @ModelAttribute(ATTRIB_NAME) TradeModel trade,
                               BindingResult result, RedirectAttributes redirAttrs) {
-        if (!tradeService.checkIfTradeIdExists(id)) {
+        if (!tradeRepository.existsById(id)) {
             logger.info(TRADE_NOT_EXISTS, id);
             return REDIRECT_TRANSAC;
         }
         if (!result.hasErrors()) {
-            tradeService.saveTrade(trade);
+            tradeRepository.save(trade);
             logger.info("UPDATE Trade {} : OK", id);
             redirAttrs.addFlashAttribute("successUpdateMessage", "Trade successfully updated");
             return REDIRECT_TRANSAC;
@@ -95,13 +96,13 @@ public class TradeController {
     @GetMapping("/trade/delete/{id}")
     public String deleteTrade(@PathVariable("id") Integer id, Model model, RedirectAttributes redirAttrs) {
         try {
-            if (!tradeService.checkIfTradeIdExists(id)) {
+            if (!tradeRepository.existsById(id)) {
                 logger.info(TRADE_NOT_EXISTS, id);
                 return REDIRECT_TRANSAC;
             }
-            tradeService.deleteTradeById(id);
+            tradeRepository.deleteById(id);
             logger.info("Delete Trade : OK");
-            model.addAttribute(ATTRIB_NAME, tradeService.getAllTrades());
+            model.addAttribute(ATTRIB_NAME, tradeRepository.findAll());
             redirAttrs.addFlashAttribute("successDeleteMessage", "Trade successfully deleted");
         } catch (Exception e) {
             redirAttrs.addFlashAttribute("errorDeleteMessage", "Error during deletion");

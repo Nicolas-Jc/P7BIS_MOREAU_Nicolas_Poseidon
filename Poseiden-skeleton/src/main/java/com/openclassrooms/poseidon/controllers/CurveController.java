@@ -1,7 +1,7 @@
 package com.openclassrooms.poseidon.controllers;
 
 import com.openclassrooms.poseidon.models.CurvePointModel;
-import com.openclassrooms.poseidon.services.CurvePointService;
+import com.openclassrooms.poseidon.repositories.CurvePointRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import java.sql.Timestamp;
 public class CurveController {
 
     @Autowired
-    CurvePointService curvePointService;
+    CurvePointRepository curvePointRepository;
 
     private static final Logger logger = LogManager.getLogger("CurveController");
     private static final String ATTRIB_NAME = "curvePoint";
@@ -30,7 +30,7 @@ public class CurveController {
     @GetMapping("/curvePoint/list")
     //@RequestMapping("/curvePoint/list")
     public String home(Model model) {
-        model.addAttribute(ATTRIB_NAME, curvePointService.getAllCurvePoints());
+        model.addAttribute(ATTRIB_NAME, curvePointRepository.findAll());
         logger.info("CurvePoint List Data loading");
         return "curvePoint/list";
     }
@@ -51,7 +51,7 @@ public class CurveController {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             curvePoint.setAsOfDate(timestamp);
             curvePoint.setCreationDate(timestamp);
-            curvePointService.saveCurvePoint(curvePoint);
+            curvePointRepository.save(curvePoint);
             redirAttrs.addFlashAttribute("successSaveMessage", "CurvePoint successfully added to list");
             logger.info("CurvePoint {} was added to Curve Point List", curvePoint);
 
@@ -65,11 +65,11 @@ public class CurveController {
     @GetMapping("/curvePoint/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         try {
-            if (!curvePointService.checkIfIdExists(id)) {
+            if (!curvePointRepository.existsById(id)) {
                 logger.info(CURVE_POINT_NOT_EXISTS, id);
                 return REDIRECT_TRANSAC;
             }
-            model.addAttribute(ATTRIB_NAME, curvePointService.getCurvePointById(id));
+            model.addAttribute(ATTRIB_NAME, curvePointRepository.findById(id));
             logger.info("Success CurvePoint Update");
         } catch (Exception e) {
             logger.info("Error to update \"CurvePoint\" : {}", id);
@@ -81,12 +81,12 @@ public class CurveController {
     @PostMapping("/curvePoint/update/{id}")
     public String updateBid(@PathVariable("id") Integer id, @Valid @ModelAttribute(ATTRIB_NAME) CurvePointModel curvePoint,
                             BindingResult result, RedirectAttributes redirAttrs) {
-        if (!curvePointService.checkIfIdExists(id)) {
+        if (!curvePointRepository.existsById(id)) {
             logger.info(CURVE_POINT_NOT_EXISTS, id);
             return REDIRECT_TRANSAC;
         }
         if (!result.hasErrors()) {
-            curvePointService.saveCurvePoint(curvePoint);
+            curvePointRepository.save(curvePoint);
             logger.info("UPDATE CurvePoint {} : OK", id);
             redirAttrs.addFlashAttribute("successUpdateMessage", "CurvePoint successfully updated");
             return REDIRECT_TRANSAC;
@@ -98,13 +98,13 @@ public class CurveController {
     @GetMapping("/curvePoint/delete/{id}")
     public String deleteBid(@PathVariable("id") Integer id, Model model, RedirectAttributes redirAttrs) {
         try {
-            if (!curvePointService.checkIfIdExists(id)) {
+            if (!curvePointRepository.existsById(id)) {
                 logger.info(CURVE_POINT_NOT_EXISTS, id);
                 return REDIRECT_TRANSAC;
             }
-            curvePointService.deleteCurvePointById(id);
+            curvePointRepository.deleteById(id);
             logger.info("Delete CurvePoint : OK");
-            model.addAttribute(ATTRIB_NAME, curvePointService.getAllCurvePoints());
+            model.addAttribute(ATTRIB_NAME, curvePointRepository.findAll());
             redirAttrs.addFlashAttribute("successDeleteMessage", "CurvePoint successfully deleted");
         } catch (Exception e) {
             redirAttrs.addFlashAttribute("errorDeleteMessage", "Error during deletion");

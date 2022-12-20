@@ -1,7 +1,7 @@
 package com.openclassrooms.poseidon.controllers;
 
 import com.openclassrooms.poseidon.models.UserModel;
-import com.openclassrooms.poseidon.services.UserService;
+import com.openclassrooms.poseidon.repositories.UserRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +23,14 @@ public class UserController {
     private static final String ATTRIB_NAME = "users";
     private static final String USER_NOT_EXISTS = "User {} not exists ! : ";
 
+
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @RolesAllowed("ADMIN")
     @RequestMapping("/user/list")
     public String home(Model model) {
-        model.addAttribute(ATTRIB_NAME, userService.getAllUsers());
+        model.addAttribute(ATTRIB_NAME, userRepository.findAll());
         logger.info("User List Data loading");
         return "user/list";
     }
@@ -47,17 +48,17 @@ public class UserController {
     @PostMapping("/user/validate")
     public String validate(@Valid @ModelAttribute("user") UserModel user, BindingResult result,
                            Model model, RedirectAttributes redirAttrs) {
-        if (userService.checkIfUserExistsByUsername(user.getUsername())) {
+        if (userRepository.existsByUsername(user.getUsername())) {
             redirAttrs.addFlashAttribute("errorAddUserMessage", "This user already exists");
             return "redirect:/user/add";
         }
         if (!result.hasErrors()) {
             BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
             user.setPassword(encoder.encode(user.getPassword()));
-            userService.saveUser(user);
+            userRepository.save(user);
             redirAttrs.addFlashAttribute("successSaveMessage", "User successfully added to list");
             logger.info("User {} was added to Trade List", user);
-            model.addAttribute(ATTRIB_NAME, userService.getAllUsers());
+            model.addAttribute(ATTRIB_NAME, userRepository.findAll());
             return REDIRECT_TRANSAC;
         }
         logger.info("Error creation User");
@@ -73,11 +74,11 @@ public class UserController {
         //model.addAttribute(ATTRIB_NAME, user);
         //return "user/update";
         try {
-            if (!userService.checkIfUserExistsById(id)) {
+            if (!userRepository.existsById(id)) {
                 logger.info(USER_NOT_EXISTS, id);
                 return REDIRECT_TRANSAC;
             }
-            model.addAttribute(ATTRIB_NAME, userService.getUserById(id));
+            model.addAttribute(ATTRIB_NAME, userRepository.findById(id));
             logger.info("Success User Update");
         } catch (Exception e) {
             logger.info("Error to update \"User\" : {}", id);
@@ -95,7 +96,7 @@ public class UserController {
             logger.info("UPDATE User : KO");
             return "user/update";
         }
-        if (!userService.checkIfUserExistsById(id)) {
+        if (!userRepository.existsById(id)) {
             logger.info(USER_NOT_EXISTS, id);
             return REDIRECT_TRANSAC;
         }
@@ -103,8 +104,8 @@ public class UserController {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         user.setPassword(encoder.encode(user.getPassword()));
         user.setId(id);
-        userService.saveUser(user);
-        model.addAttribute(ATTRIB_NAME, userService.getAllUsers());
+        userRepository.save(user);
+        model.addAttribute(ATTRIB_NAME, userRepository.findAll());
         logger.info("UPDATE User {} : OK", id);
         redirAttrs.addFlashAttribute("successUpdateMessage", "User successfully updated");
         return REDIRECT_TRANSAC;
@@ -117,13 +118,13 @@ public class UserController {
         //userRepository.delete(user);
         //model.addAttribute(ATTRIB_NAME, userRepository.findAll());
         try {
-            if (!userService.checkIfUserExistsById(id)) {
+            if (!userRepository.existsById(id)) {
                 logger.info(USER_NOT_EXISTS, id);
                 return REDIRECT_TRANSAC;
             }
-            userService.deleteUserById(id);
+            userRepository.deleteById(id);
             logger.info("Delete User : OK");
-            model.addAttribute(ATTRIB_NAME, userService.getAllUsers());
+            model.addAttribute(ATTRIB_NAME, userRepository.findAll());
             redirAttrs.addFlashAttribute("successDeleteMessage", "User successfully deleted");
         } catch (Exception e) {
             redirAttrs.addFlashAttribute("errorDeleteMessage", "Error during deletion");
