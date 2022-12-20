@@ -55,7 +55,7 @@ public class RuleNameController {
     }
 
     // Show Update Form
-    @GetMapping("/ruleName/update/{id}")
+    /*@GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         try {
             if (!ruleNameRepository.existsById(id)) {
@@ -67,6 +67,15 @@ public class RuleNameController {
         } catch (Exception e) {
             logger.info("Error to update \"Rule\" : {}", id);
         }
+        return "ruleName/update";
+    }*/
+
+    @GetMapping("/ruleName/update/{id}")
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+        RuleNameModel rule = ruleNameRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
+        model.addAttribute("ruleName", rule);
+        logger.info("GET /ruleName/update : OK");
         return "ruleName/update";
     }
 

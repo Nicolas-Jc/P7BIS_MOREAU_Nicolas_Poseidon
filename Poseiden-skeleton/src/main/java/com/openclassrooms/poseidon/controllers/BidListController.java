@@ -64,7 +64,7 @@ public class BidListController {
     }
 
     // Show Update Form Load
-    @GetMapping("/bidList/update/{id}")
+    /*@GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         try {
             if (!bidListRepository.existsById(id)) {
@@ -76,6 +76,15 @@ public class BidListController {
         } catch (Exception e) {
             logger.info("Error to load Form Bid Update \"Bid Id\" : {}", id);
         }
+        return "bidList/update";
+    }*/
+
+    @GetMapping("/bidList/update/{id}")
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+        BidListModel bid = bidListRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid bidList Id:" + id));
+        model.addAttribute("bidList", bid);
+        logger.info("GET /bidList/update : OK");
         return "bidList/update";
     }
 

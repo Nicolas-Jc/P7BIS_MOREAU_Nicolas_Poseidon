@@ -12,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 
 @Controller
@@ -68,7 +67,7 @@ public class UserController {
 
     // Show User Update Form
     //@RolesAllowed("ADMIN")
-    @GetMapping("/user/update/{id}")
+    /*@GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         //UserModel user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
         //user.setPassword("");
@@ -85,7 +84,16 @@ public class UserController {
             logger.info("Error to update \"User\" : {}", id);
         }
         return "user/update";
+    }*/
 
+    @GetMapping("/user/update/{id}")
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+        UserModel user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user Id:" + id));
+        user.setPassword("");
+        model.addAttribute("user", user);
+        logger.info("GET /user/update : OK");
+        return "user/update";
     }
 
     // Update User Button

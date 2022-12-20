@@ -59,7 +59,7 @@ public class RatingController {
     }
 
     // Show Update Form Load
-    @GetMapping("/rating/update/{id}")
+    /*@GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         try {
             if (!ratingRepository.existsById(id)) {
@@ -71,6 +71,15 @@ public class RatingController {
         } catch (Exception e) {
             logger.info("Error to update \"Rating\" : {}", id);
         }
+        return "rating/update";
+    }*/
+
+    @GetMapping("/rating/update/{id}")
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+        RatingModel rating = ratingRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id));
+        model.addAttribute("rating", rating);
+        logger.info("GET /rating/update : OK");
         return "rating/update";
     }
 

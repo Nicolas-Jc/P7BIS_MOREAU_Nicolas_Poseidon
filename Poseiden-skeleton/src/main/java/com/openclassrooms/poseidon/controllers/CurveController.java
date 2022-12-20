@@ -62,7 +62,7 @@ public class CurveController {
     }
 
     // Show Update Form Load
-    @GetMapping("/curvePoint/update/{id}")
+    /*@GetMapping("/curvePoint/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         try {
             if (!curvePointRepository.existsById(id)) {
@@ -74,6 +74,15 @@ public class CurveController {
         } catch (Exception e) {
             logger.info("Error to update \"CurvePoint\" : {}", id);
         }
+        return "curvePoint/update";
+    }*/
+
+    @GetMapping("/curvePoint/update/{id}")
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+        CurvePointModel curvePoint = curvePointRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid curvePoint Id:" + id));
+        model.addAttribute("curvePoint", curvePoint);
+        logger.info("GET /curvePoint/update : OK");
         return "curvePoint/update";
     }
 

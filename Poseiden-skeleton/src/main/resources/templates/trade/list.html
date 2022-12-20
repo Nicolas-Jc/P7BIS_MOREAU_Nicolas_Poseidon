@@ -49,8 +49,8 @@
                 <td><span th:text="${tradeModel.type}"></span></td>
                 <td><span th:text="${tradeModel.buyQuantity}"></span></td>
                 <td style="width: 15%" class="text-center">
-                    <a th:href="@{/ruleName/update/{id}(id=${tradeModel.tradeId})}">Edit</a>&nbsp;|&nbsp;
-                    <a th:href="@{/ruleName/delete/{id}(id=${tradeModel.tradeId})}"
+                    <a th:href="@{/trade/update/{id}(id=${tradeModel.tradeId})}">Edit</a>&nbsp;|&nbsp;
+                    <a th:href="@{/trade/delete/{id}(id=${tradeModel.tradeId})}"
                        onclick="return confirm('Do you confirm the deletion ?')">Delete</a>
                 </td>
             </tr>

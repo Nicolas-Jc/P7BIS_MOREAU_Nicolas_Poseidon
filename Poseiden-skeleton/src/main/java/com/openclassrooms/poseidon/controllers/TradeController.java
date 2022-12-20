@@ -60,7 +60,7 @@ public class TradeController {
     }
 
     // Show Update Form
-    @GetMapping("/trade/update/{id}")
+    /*@GetMapping("/trade/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         try {
             if (!tradeRepository.existsById(id)) {
@@ -72,6 +72,15 @@ public class TradeController {
         } catch (Exception e) {
             logger.info("Error to update \"Trade\" : {}", id);
         }
+        return "trade/update";
+    }*/
+
+    @GetMapping("/trade/update/{id}")
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+        TradeModel trade = tradeRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid trade Id:" + id));
+        model.addAttribute("trade", trade);
+        logger.info("GET /trade/update : OK");
         return "trade/update";
     }
 
