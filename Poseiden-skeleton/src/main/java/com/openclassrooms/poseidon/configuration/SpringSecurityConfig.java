@@ -1,5 +1,7 @@
 package com.openclassrooms.poseidon.configuration;
 
+import com.openclassrooms.poseidon.services.CustomUserDetailService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    CustomUserDetailService userDetailService;
 
     @Override
     // Temporaire pour 1ers Tests - A désactiver au final
