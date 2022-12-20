@@ -2,15 +2,16 @@ package com.openclassrooms.poseidon.models;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "bidlist")
 public class BidListModel {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "bidListId")
     private Integer bidListId;
 
@@ -25,6 +26,7 @@ public class BidListModel {
     private String type;
 
     @Column(name = "bidQuantity")
+    @NotNull(message = "Bid Quantity is mandatory")
     @Positive(message = "Bid Quantity must be greater than zero")
     private Double bidQuantity;
 

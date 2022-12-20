@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "trade")
 public class TradeModel {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "tradeId")
     private Integer tradeId;
 
@@ -43,7 +44,6 @@ public class TradeModel {
     @Column(name = "benchmark")
     private String benchmark;
 
-    @NotNull(message = "Trade date is mandatory")
     @Column(name = "tradeDate")
     private Timestamp tradeDate;
 

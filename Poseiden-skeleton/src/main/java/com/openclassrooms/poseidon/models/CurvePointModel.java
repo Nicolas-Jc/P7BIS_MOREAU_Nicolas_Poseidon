@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "curvepoint")
 public class CurvePointModel {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Integer id;
 

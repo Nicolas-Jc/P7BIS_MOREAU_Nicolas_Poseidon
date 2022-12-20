@@ -8,6 +8,7 @@ import javax.validation.constraints.Size;
 @Table(name = "rulename")
 public class RuleNameModel {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Integer id;
 

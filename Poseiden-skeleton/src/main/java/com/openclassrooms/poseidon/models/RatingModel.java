@@ -1,6 +1,7 @@
 package com.openclassrooms.poseidon.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
@@ -9,22 +10,23 @@ import javax.validation.constraints.Size;
 @Table(name = "rating")
 public class RatingModel {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Integer id;
 
+    @NotBlank(message = "Moodys Rating is mandatory")
     @Size(max = 125)
     @Column(name = "moodysRating")
-    @NotNull(message = "Moodys Rating is mandatory")
     private String moodysRating;
 
+    @NotBlank(message = "Sand PRating is mandatory")
     @Size(max = 125)
     @Column(name = "sandPRating")
-    @NotNull(message = "Sand PRating is mandatory")
     private String sandPRating;
 
+    @NotBlank(message = "Fitch Rating is mandatory")
     @Size(max = 125)
     @Column(name = "fitchRating")
-    @NotNull(message = "Fitch Rating is mandatory")
     private String fitchRating;
 
     @NotNull(message = "Order Number is mandatory")

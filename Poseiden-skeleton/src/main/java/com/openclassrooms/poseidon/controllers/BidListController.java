@@ -72,9 +72,9 @@ public class BidListController {
                 return REDIRECT_TRANSAC;
             }
             model.addAttribute(ATTRIB_NAME, bidListRepository.findById(id));
-            logger.info("Succes Bid Update");
+            logger.info("Succes Bid Form Load");
         } catch (Exception e) {
-            logger.info("Error to update \"Bid Id\" : {}", id);
+            logger.info("Error to load Form Bid Update \"Bid Id\" : {}", id);
         }
         return "bidList/update";
     }
@@ -88,6 +88,7 @@ public class BidListController {
             return REDIRECT_TRANSAC;
         }
         if (!result.hasErrors()) {
+            bidList.setBidListId(id);
             bidListRepository.save(bidList);
             logger.info("UPDATE Bid {} : OK", id);
             redirAttrs.addFlashAttribute("successUpdateMessage", "Bid successfully updated");

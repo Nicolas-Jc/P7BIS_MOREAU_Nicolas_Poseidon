@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Table(name = "users")
 public class UserModel {
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Integer id;
     @Column(name = "username")

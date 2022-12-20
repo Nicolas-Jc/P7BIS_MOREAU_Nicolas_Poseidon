@@ -46,7 +46,7 @@ public class UserController {
     // Button Add User To List
     //@RolesAllowed("ADMIN")
     @PostMapping("/user/validate")
-    public String validate(@Valid UserModel user, BindingResult result,
+    public String validate(@Valid @ModelAttribute(ATTRIB_NAME) UserModel user, BindingResult result,
                            Model model, RedirectAttributes redirAttrs) {
        //f (userRepository.existsByUsername(user.getUsername())) {
        /*if (userRepository.existsByUsername(user.getUsername())) {
@@ -91,7 +91,7 @@ public class UserController {
     // Update User Button
     //@RolesAllowed("ADMIN")
     @PostMapping("/user/update/{id}")
-    public String updateUser(@PathVariable("id") Integer id, @Valid UserModel user,
+    public String updateUser(@PathVariable("id") Integer id, @Valid @ModelAttribute(ATTRIB_NAME) UserModel user,
                              BindingResult result, Model model, RedirectAttributes redirAttrs) {
         if (result.hasErrors()) {
             logger.info("UPDATE User : KO");
