@@ -1,7 +1,6 @@
-package com.openclassrooms.poseidon;
+package com.openclassrooms.poseidon.repositories;
 
-import com.openclassrooms.poseidon.models.RuleNameModel;
-import com.openclassrooms.poseidon.repositories.RuleNameRepository;
+import com.openclassrooms.poseidon.models.RuleModel;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +20,14 @@ public class RuleTests {
 
 	@Test
 	public void ruleTest() {
-		RuleNameModel rule = new RuleNameModel("Rule Name", "Description", "Json", "Template", "SQL", "SQL Part");
+		//RuleNameModel rule = new RuleNameModel("Rule Name", "Description", "Json", "Template", "SQL", "SQL Part");
+		RuleModel rule = new RuleModel();
+		rule.setName("Rule Name");
+		rule.setDescription("Description");
+		rule.setJson("Json");
+		rule.setTemplate("Template");
+		rule.setSqlStr("SQL");
+		rule.setSqlPart("SQL Part");
 
 		// Save
 		rule = ruleNameRepository.save(rule);
@@ -34,13 +40,13 @@ public class RuleTests {
 		Assert.assertEquals("Rule Name Update", rule.getName());
 
 		// Find
-		List<RuleNameModel> listResult = ruleNameRepository.findAll();
+		List<RuleModel> listResult = ruleNameRepository.findAll();
 		Assert.assertTrue(listResult.size() > 0);
 
 		// Delete
 		Integer id = rule.getId();
 		ruleNameRepository.delete(rule);
-		Optional<RuleNameModel> ruleList = ruleNameRepository.findById(id);
+		Optional<RuleModel> ruleList = ruleNameRepository.findById(id);
 		Assert.assertFalse(ruleList.isPresent());
 	}
 }

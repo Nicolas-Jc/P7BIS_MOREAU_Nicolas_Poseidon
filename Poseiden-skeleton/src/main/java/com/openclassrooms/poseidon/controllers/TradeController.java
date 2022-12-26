@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 
 @Controller
 public class TradeController {
-    private static final Logger logger = LogManager.getLogger("TradeController");
+    private static final Logger logger = LogManager.getLogger(TradeController.class);
     private static final String ATTRIB_NAME = "trade";
     private static final String REDIRECT_TRANSAC = "redirect:/trade/list";
     private static final String TRADE_NOT_EXISTS = "Trade {} not exists ! : ";
@@ -52,7 +52,7 @@ public class TradeController {
             trade.setTradeDate(timestamp);
             tradeRepository.save(trade);
             redirAttrs.addFlashAttribute("successSaveMessage", "Trade successfully added to list");
-            logger.info("Trade {} was added to Trade List", trade);
+            logger.info("Trade Id:{} was added to Trade List", trade.getTradeId());
             return REDIRECT_TRANSAC;
         }
         logger.info("Error creation Trade");

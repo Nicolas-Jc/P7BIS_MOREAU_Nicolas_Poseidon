@@ -1,6 +1,6 @@
 package com.openclassrooms.poseidon.controllers;
 
-import com.openclassrooms.poseidon.models.RuleNameModel;
+import com.openclassrooms.poseidon.models.RuleModel;
 import com.openclassrooms.poseidon.repositories.RuleNameRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,7 +16,7 @@ import javax.validation.Valid;
 @Controller
 public class RuleNameController {
 
-    private static final Logger logger = LogManager.getLogger("RuleNameController");
+    private static final Logger logger = LogManager.getLogger(RuleNameController.class);
     private static final String ATTRIB_NAME = "ruleName";
     private static final String REDIRECT_TRANSAC = "redirect:/ruleName/list";
     private static final String RULE_NOT_EXISTS = "Rule {} not exists ! : ";
@@ -36,18 +36,18 @@ public class RuleNameController {
     // view Rules/add
     @GetMapping("/ruleName/add")
     public String addRuleForm(Model model) {
-        model.addAttribute(ATTRIB_NAME, new RuleNameModel());
+        model.addAttribute(ATTRIB_NAME, new RuleModel());
         logger.info("View Rule Add loaded");
         return "ruleName/add";
     }
 
     // Button Add Rule To List
     @PostMapping("/ruleName/validate")
-    public String validate(@Valid @ModelAttribute(ATTRIB_NAME) RuleNameModel ruleName, BindingResult result, RedirectAttributes redirAttrs) {
+    public String validate(@Valid @ModelAttribute(ATTRIB_NAME) RuleModel ruleName, BindingResult result, RedirectAttributes redirAttrs) {
         if (!result.hasErrors()) {
             ruleNameRepository.save(ruleName);
             redirAttrs.addFlashAttribute("successSaveMessage", "Rule successfully added to list");
-            logger.info("Rule {} was added to Rules List", ruleName);
+            logger.info("Rule Id:{} was added to Rules List", ruleName.getId());
             return REDIRECT_TRANSAC;
         }
         logger.info("Error creation Rule");
@@ -72,7 +72,7 @@ public class RuleNameController {
 
     @GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        RuleNameModel rule = ruleNameRepository.findById(id)
+        RuleModel rule = ruleNameRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
         model.addAttribute("ruleName", rule);
         logger.info("GET /ruleName/update : OK");
@@ -81,7 +81,7 @@ public class RuleNameController {
 
     // Update Rule Button
     @PostMapping("/ruleName/update/{id}")
-    public String updateRuleName(@PathVariable("id") Integer id, @Valid @ModelAttribute(ATTRIB_NAME) RuleNameModel ruleName,
+    public String updateRuleName(@PathVariable("id") Integer id, @Valid @ModelAttribute(ATTRIB_NAME) RuleModel ruleName,
                                  BindingResult result, RedirectAttributes redirAttrs) {
         if (!ruleNameRepository.existsById(id)) {
             logger.info(RULE_NOT_EXISTS, id);

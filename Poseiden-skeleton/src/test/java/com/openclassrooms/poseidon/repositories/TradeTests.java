@@ -1,5 +1,6 @@
-package com.openclassrooms.poseidon;
+package com.openclassrooms.poseidon.repositories;
 
+import com.openclassrooms.poseidon.models.RuleModel;
 import com.openclassrooms.poseidon.models.TradeModel;
 import com.openclassrooms.poseidon.repositories.TradeRepository;
 import org.junit.Assert;
@@ -21,7 +22,11 @@ public class TradeTests {
 
 	@Test
 	public void tradeTest() {
-		TradeModel trade = new TradeModel("Trade Account", "Type");
+		//TradeModel trade = new TradeModel("Trade Account", "Type");
+		TradeModel trade = new TradeModel();
+		trade.setAccount("Trade Account");
+		trade.setType("Type");
+		trade.setBuyQuantity(20d);
 
 		// Save
 		trade = tradeRepository.save(trade);

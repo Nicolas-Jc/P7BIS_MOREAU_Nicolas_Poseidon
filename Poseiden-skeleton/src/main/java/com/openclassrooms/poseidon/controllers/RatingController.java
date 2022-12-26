@@ -16,7 +16,7 @@ import javax.validation.Valid;
 @Controller
 public class RatingController {
 
-    private static final Logger logger = LogManager.getLogger("RatingController");
+    private static final Logger logger = LogManager.getLogger(RatingController.class);
 
     private static final String ATTRIB_NAME = "rating";
     private static final String REDIRECT_TRANSAC = "redirect:/rating/list";
@@ -51,7 +51,7 @@ public class RatingController {
         if (!result.hasErrors()) {
             ratingRepository.save(rating);
             redirAttrs.addFlashAttribute("successSaveMessage", "Rating successfully added to list");
-            logger.info("Rating {} was added to Rating List", rating);
+            logger.info("Rating Id:{} was added to Rating List", rating.getId());
             return REDIRECT_TRANSAC;
         }
         logger.info("Error creation Rating");

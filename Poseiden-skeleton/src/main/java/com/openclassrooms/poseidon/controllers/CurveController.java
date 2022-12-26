@@ -20,7 +20,7 @@ public class CurveController {
     @Autowired
     CurvePointRepository curvePointRepository;
 
-    private static final Logger logger = LogManager.getLogger("CurveController");
+    private static final Logger logger = LogManager.getLogger(CurveController.class);
     private static final String ATTRIB_NAME = "curvePoint";
     private static final String CURVE_POINT_NOT_EXISTS = "CurvePoint {} not exists ! : ";
     private static final String REDIRECT_TRANSAC = "redirect:/curvePoint/list";
@@ -53,7 +53,7 @@ public class CurveController {
             curvePoint.setCreationDate(timestamp);
             curvePointRepository.save(curvePoint);
             redirAttrs.addFlashAttribute("successSaveMessage", "CurvePoint successfully added to list");
-            logger.info("CurvePoint {} was added to Curve Point List", curvePoint);
+            logger.info("CurvePoint Id:{} was added to Curve Point List", curvePoint.getCurveId());
 
             return REDIRECT_TRANSAC;
         }
@@ -61,21 +61,6 @@ public class CurveController {
         return "curvePoint/add";
     }
 
-    // Show Update Form Load
-    /*@GetMapping("/curvePoint/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        try {
-            if (!curvePointRepository.existsById(id)) {
-                logger.info(CURVE_POINT_NOT_EXISTS, id);
-                return REDIRECT_TRANSAC;
-            }
-            model.addAttribute(ATTRIB_NAME, curvePointRepository.findById(id));
-            logger.info("Success CurvePoint Update");
-        } catch (Exception e) {
-            logger.info("Error to update \"CurvePoint\" : {}", id);
-        }
-        return "curvePoint/update";
-    }*/
 
     @GetMapping("/curvePoint/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {

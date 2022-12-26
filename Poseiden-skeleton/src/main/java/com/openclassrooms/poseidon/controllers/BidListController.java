@@ -20,7 +20,9 @@ public class BidListController {
     @Autowired
     private BidListRepository bidListRepository;
 
-    private static final Logger logger = LogManager.getLogger("BidListController");
+    private static final Logger logger = LogManager.getLogger(BidListController.class);
+
+
     private static final String REDIRECT_TRANSAC = "redirect:/bidList/list";
     private static final String ATTRIB_NAME = "bidList";
     private static final String BID_NOT_EXISTS = "Bid {} not exists ! : ";
@@ -56,28 +58,13 @@ public class BidListController {
             bidList.setCreationDate(timestamp);
             bidListRepository.save(bidList);
             redirAttrs.addFlashAttribute("successSaveMessage", "Bid successfully added to list");
-            logger.info("Bid {} was added to BidList", bidList);
+            logger.info("Bid Id: {} was added to BidList", bidList.getBidListId());
             return REDIRECT_TRANSAC;
         }
-        logger.info("Error creation Bid");
+        logger.error("Error creation Bid");
         return "bidList/add";
     }
 
-    // Show Update Form Load
-    /*@GetMapping("/bidList/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        try {
-            if (!bidListRepository.existsById(id)) {
-                logger.info(BID_NOT_EXISTS, id);
-                return REDIRECT_TRANSAC;
-            }
-            model.addAttribute(ATTRIB_NAME, bidListRepository.findById(id));
-            logger.info("Succes Bid Form Load");
-        } catch (Exception e) {
-            logger.info("Error to load Form Bid Update \"Bid Id\" : {}", id);
-        }
-        return "bidList/update";
-    }*/
 
     @GetMapping("/bidList/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
@@ -93,7 +80,7 @@ public class BidListController {
     public String updateBid(@PathVariable("id") Integer id, @Valid @ModelAttribute(ATTRIB_NAME) BidListModel bidList,
                             BindingResult result, RedirectAttributes redirAttrs) {
         if (!bidListRepository.existsById(id)) {
-            logger.info(BID_NOT_EXISTS, id);
+            logger.error(BID_NOT_EXISTS, id);
             return REDIRECT_TRANSAC;
         }
         if (!result.hasErrors()) {
@@ -103,7 +90,7 @@ public class BidListController {
             redirAttrs.addFlashAttribute("successUpdateMessage", "Bid successfully updated");
             return REDIRECT_TRANSAC;
         }
-        logger.info("UPDATE Bid : KO");
+        logger.error("UPDATE Bid : KO");
         return "/bidList/add";
     }
 
@@ -112,7 +99,7 @@ public class BidListController {
     public String deleteBid(@PathVariable("id") Integer id, Model model, RedirectAttributes redirAttrs) {
         try {
             if (!bidListRepository.existsById(id)) {
-                logger.info(BID_NOT_EXISTS, id);
+                logger.error(BID_NOT_EXISTS, id);
                 return REDIRECT_TRANSAC;
             }
             bidListRepository.deleteById(id);
@@ -121,7 +108,7 @@ public class BidListController {
             redirAttrs.addFlashAttribute("successDeleteMessage", "DELETE Bid : OK");
         } catch (Exception e) {
             redirAttrs.addFlashAttribute("errorDeleteMessage", "Error during deletion");
-            logger.info("Error to delete \"Bid \" : {}", id);
+            logger.error("Error to delete \"Bid \" : {}", id);
         }
         return REDIRECT_TRANSAC;
     }

@@ -1,5 +1,6 @@
-package com.openclassrooms.poseidon;
+package com.openclassrooms.poseidon.repositories;
 
+import com.openclassrooms.poseidon.models.CurvePointModel;
 import com.openclassrooms.poseidon.models.RatingModel;
 import com.openclassrooms.poseidon.repositories.RatingRepository;
 import org.junit.Assert;
@@ -21,7 +22,12 @@ public class RatingTests {
 
 	@Test
 	public void ratingTest() {
-		RatingModel rating = new RatingModel("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
+		//RatingModel rating = new RatingModel("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
+		RatingModel rating = new RatingModel();
+		rating.setMoodysRating("Moodys Rating");
+		rating.setSandPRating("Sand PRating");
+		rating.setFitchRating("Fitch Rating");
+		rating.setOrderNumber(10);
 
 		// Save
 		rating = ratingRepository.save(rating);

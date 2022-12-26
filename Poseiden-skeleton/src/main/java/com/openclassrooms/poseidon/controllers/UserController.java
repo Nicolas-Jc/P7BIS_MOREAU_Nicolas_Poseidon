@@ -17,7 +17,7 @@ import javax.validation.Valid;
 @Controller
 public class UserController {
 
-    private static final Logger logger = LogManager.getLogger("UserController");
+    private static final Logger logger = LogManager.getLogger(UserController.class);
     private static final String REDIRECT_TRANSAC = "redirect:/user/list";
     private static final String ATTRIB_NAME = "users";
     private static final String USER_NOT_EXISTS = "User {} not exists ! : ";
@@ -57,7 +57,7 @@ public class UserController {
             user.setPassword(encoder.encode(user.getPassword()));
             userRepository.save(user);
             redirAttrs.addFlashAttribute("successSaveMessage", "User successfully added to list");
-            logger.info("User {} was added to Trade List", user);
+            logger.info("User Id:{} was added to Trade List", user.getId());
             model.addAttribute("users", userRepository.findAll());
             return REDIRECT_TRANSAC;
         }

@@ -1,7 +1,7 @@
-package com.openclassrooms.poseidon;
+package com.openclassrooms.poseidon.repositories;
 
+import com.openclassrooms.poseidon.models.BidListModel;
 import com.openclassrooms.poseidon.models.CurvePointModel;
-import com.openclassrooms.poseidon.repositories.CurvePointRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,14 +14,18 @@ import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class CurvePointTests {
+public class CurvePointRepositoryTest {
 
 	@Autowired
 	private CurvePointRepository curvePointRepository;
 
 	@Test
 	public void curvePointTest() {
-		CurvePointModel curvePoint = new CurvePointModel(10, 10d, 30d);
+		//CurvePointModel curvePoint = new CurvePointModel(10, 10d, 30d);
+		CurvePointModel curvePoint = new CurvePointModel();
+		curvePoint.setCurveId(10);
+		curvePoint.setTerm(10d);
+		curvePoint.setValue(30d);
 
 		// Save
 		curvePoint = curvePointRepository.save(curvePoint);
