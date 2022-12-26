@@ -1,8 +1,6 @@
 package com.openclassrooms.poseidon.repositories;
 
-import com.openclassrooms.poseidon.models.CurvePointModel;
 import com.openclassrooms.poseidon.models.RatingModel;
-import com.openclassrooms.poseidon.repositories.RatingRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
