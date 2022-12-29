@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface TradeRepository extends JpaRepository<TradeModel, Integer> {
 
+    TradeModel findById(int id);
+
 }

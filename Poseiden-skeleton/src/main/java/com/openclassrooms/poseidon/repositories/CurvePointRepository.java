@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface CurvePointRepository extends JpaRepository<CurvePointModel, Integer> {
 
+    CurvePointModel findById(int id);
+
 
 }

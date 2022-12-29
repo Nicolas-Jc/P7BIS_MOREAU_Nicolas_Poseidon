@@ -2,6 +2,7 @@ package com.openclassrooms.poseidon.controllers;
 
 import com.openclassrooms.poseidon.models.RatingModel;
 import com.openclassrooms.poseidon.repositories.RatingRepository;
+import com.openclassrooms.poseidon.services.RatingService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +27,15 @@ public class RatingController {
     @Autowired
     RatingRepository ratingRepository;
 
+    @Autowired
+    RatingService ratingService;
+
 
     // return view containing all Ratings
     @GetMapping("/rating/list")
     //@RequestMapping("/rating/list")
     public String home(Model model) {
-        model.addAttribute(ATTRIB_NAME, ratingRepository.findAll());
+        model.addAttribute(ATTRIB_NAME, ratingService.getAllRatings());
         logger.info("Rating List Data loading");
         return "rating/list";
     }
@@ -49,9 +53,10 @@ public class RatingController {
     public String validate(@Valid @ModelAttribute(ATTRIB_NAME) RatingModel rating, BindingResult result, RedirectAttributes redirAttrs) {
 
         if (!result.hasErrors()) {
-            ratingRepository.save(rating);
+            ratingService.saveRating(rating);
+            //ratingRepository.save(rating);
             redirAttrs.addFlashAttribute("successSaveMessage", "Rating successfully added to list");
-            logger.info("Rating Id:{} was added to Rating List", rating.getId());
+            //logger.info("Rating Id:{} was added to Rating List", rating.getId());
             return REDIRECT_TRANSAC;
         }
         logger.info("Error creation Rating");
@@ -76,11 +81,23 @@ public class RatingController {
 
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        RatingModel rating = ratingRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id));
-        model.addAttribute("rating", rating);
-        logger.info("GET /rating/update : OK");
+        try {
+            if (!ratingService.checkIfIdExists(id)) {
+                logger.info("GET /rating/update : Non existent id");
+                return "redirect:/rating/list";
+            }
+            model.addAttribute("rating", ratingService.getRatingById(id));
+            logger.info("GET /rating/update : OK");
+        } catch (Exception e) {
+            logger.info("GET /update/{id} : KO - Invalid rating ID {}", id);
+        }
         return "rating/update";
+
+        //////////////////////////////////////////////////////
+        //RatingModel rating = ratingRepository.findById(id)
+        //        .orElseThrow(() -> new IllegalArgumentException("Invalid rating Id:" + id));
+        //model.addAttribute("rating", rating);
+        ////return "rating/update";
     }
 
 
@@ -88,13 +105,15 @@ public class RatingController {
     @PostMapping("/rating/update/{id}")
     public String updateRating(@PathVariable("id") Integer id, @Valid @ModelAttribute(ATTRIB_NAME) RatingModel rating,
                                BindingResult result, RedirectAttributes redirAttrs) {
-        if (!ratingRepository.existsById(id)) {
+        //if (!ratingRepository.existsById(id)) {
+        if (!ratingService.checkIfIdExists(id)) {
             logger.info(RATING_NOT_EXISTS, id);
             return REDIRECT_TRANSAC;
         }
         if (!result.hasErrors()) {
-            ratingRepository.save(rating);
-            logger.info("UPDATE Rating {} : OK", id);
+            //ratingRepository.save(rating);
+            ratingService.saveRating(rating);
+            //logger.info("UPDATE Rating {} : OK", id);
             redirAttrs.addFlashAttribute("successUpdateMessage", "Rating successfully updated");
             return REDIRECT_TRANSAC;
         }
@@ -106,13 +125,14 @@ public class RatingController {
     @GetMapping("/rating/delete/{id}")
     public String deleteRating(@PathVariable("id") Integer id, Model model, RedirectAttributes redirAttrs) {
         try {
-            if (!ratingRepository.existsById(id)) {
+            if (!ratingService.checkIfIdExists(id)) {
                 logger.info(RATING_NOT_EXISTS, id);
                 return REDIRECT_TRANSAC;
             }
-            ratingRepository.deleteById(id);
-            logger.info("Delete Rating : OK");
-            model.addAttribute(ATTRIB_NAME, ratingRepository.findAll());
+            //ratingRepository.deleteById(id);
+            ratingService.deleteRatingById(id);
+            //logger.info("Delete Rating : OK");
+            model.addAttribute(ATTRIB_NAME, ratingService.getAllRatings());
             redirAttrs.addFlashAttribute("successDeleteMessage", "Rating successfully deleted");
         } catch (Exception e) {
             redirAttrs.addFlashAttribute("errorDeleteMessage", "Error during deletion");

@@ -2,6 +2,7 @@ package com.openclassrooms.poseidon.controllers;
 
 import com.openclassrooms.poseidon.models.RuleModel;
 import com.openclassrooms.poseidon.repositories.RuleNameRepository;
+import com.openclassrooms.poseidon.services.RuleNameService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,14 @@ public class RuleNameController {
     @Autowired
     RuleNameRepository ruleNameRepository;
 
+    @Autowired
+    RuleNameService ruleNameService;
+
     // return view containing all Rules
     @GetMapping("/ruleName/list")
     //@RequestMapping("/ruleName/list")
     public String home(Model model) {
-        model.addAttribute(ATTRIB_NAME, ruleNameRepository.findAll());
+        model.addAttribute(ATTRIB_NAME, ruleNameService.getAllRuleNames());
         logger.info("Rules List Data loading");
         return "ruleName/list";
     }
@@ -45,9 +49,9 @@ public class RuleNameController {
     @PostMapping("/ruleName/validate")
     public String validate(@Valid @ModelAttribute(ATTRIB_NAME) RuleModel ruleName, BindingResult result, RedirectAttributes redirAttrs) {
         if (!result.hasErrors()) {
-            ruleNameRepository.save(ruleName);
+            ruleNameService.saveRuleName(ruleName);
             redirAttrs.addFlashAttribute("successSaveMessage", "Rule successfully added to list");
-            logger.info("Rule Id:{} was added to Rules List", ruleName.getId());
+            //logger.info("Rule Id:{} was added to Rules List", ruleName.getId());
             return REDIRECT_TRANSAC;
         }
         logger.info("Error creation Rule");
@@ -72,24 +76,37 @@ public class RuleNameController {
 
     @GetMapping("/ruleName/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        RuleModel rule = ruleNameRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
-        model.addAttribute("ruleName", rule);
-        logger.info("GET /ruleName/update : OK");
+        try {
+            if (!ruleNameService.checkIfIdExists(id)) {
+                logger.info("GET /ruleName/update : Non existent id");
+                return "redirect:/ruleName/list";
+            }
+            model.addAttribute("ruleName", ruleNameService.getRuleNameById(id));
+            logger.info("GET /ruleName/update : OK");
+        } catch (Exception e) {
+            logger.info("/ruleName/update/{id} : KO - Invalid rule name ID {}", id);
+        }
         return "ruleName/update";
+
+        /////////////////////////////////////////////////////
+        //RuleModel rule = ruleNameRepository.findById(id)
+        // .orElseThrow(() -> new IllegalArgumentException("Invalid ruleName Id:" + id));
+        //model.addAttribute("ruleName", rule);
+        //logger.info("GET /ruleName/update : OK");
+        //return "ruleName/update";
     }
 
     // Update Rule Button
     @PostMapping("/ruleName/update/{id}")
     public String updateRuleName(@PathVariable("id") Integer id, @Valid @ModelAttribute(ATTRIB_NAME) RuleModel ruleName,
                                  BindingResult result, RedirectAttributes redirAttrs) {
-        if (!ruleNameRepository.existsById(id)) {
+        if (!ruleNameService.checkIfIdExists(id)) {
             logger.info(RULE_NOT_EXISTS, id);
             return REDIRECT_TRANSAC;
         }
         if (!result.hasErrors()) {
-            ruleNameRepository.save(ruleName);
-            logger.info("UPDATE Rule {} : OK", id);
+            ruleNameService.saveRuleName(ruleName);
+            //logger.info("UPDATE Rule {} : OK", id);
             redirAttrs.addFlashAttribute("successUpdateMessage", "Rule successfully updated");
             return REDIRECT_TRANSAC;
         }
@@ -100,13 +117,13 @@ public class RuleNameController {
     @GetMapping("/ruleName/delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id, Model model, RedirectAttributes redirAttrs) {
         try {
-            if (!ruleNameRepository.existsById(id)) {
+            if (!ruleNameService.checkIfIdExists(id)) {
                 logger.info(RULE_NOT_EXISTS, id);
                 return REDIRECT_TRANSAC;
             }
-            ruleNameRepository.deleteById(id);
-            logger.info("Delete Rule : OK");
-            model.addAttribute(ATTRIB_NAME, ruleNameRepository.findAll());
+            ruleNameService.deleteRuleNameById(id);
+            //logger.info("Delete Rule : OK");
+            model.addAttribute(ATTRIB_NAME, ruleNameService.getAllRuleNames());
             redirAttrs.addFlashAttribute("successDeleteMessage", "Rule successfully deleted");
         } catch (Exception e) {
             redirAttrs.addFlashAttribute("errorDeleteMessage", "Error during deletion");

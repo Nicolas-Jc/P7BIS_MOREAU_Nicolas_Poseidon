@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RuleNameRepository extends JpaRepository<RuleModel, Integer> {
 
+    RuleModel findById(int id);
+
 }
